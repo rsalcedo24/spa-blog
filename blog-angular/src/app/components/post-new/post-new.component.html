@@ -1,0 +1,69 @@
+<div class="col-md-12 mt-3">
+
+	<h1>{{page_title}}</h1>
+
+
+	<p *ngIf="!is_edit">
+	Añade un nuevo articulo al blog.
+	</p>
+
+	<p *ngIf="is_edit && post">
+		Modifica el post {{post.title}}.
+	</p>
+
+	<hr>
+
+
+<div class="alert alert-success col-md-5 mt-3" *ngIf="status == 'success'">
+	Los datos se han guardado correctamente!!
+</div>
+
+<div class="alert alert-danger col-md-5" *ngIf="status == 'error'">
+	Los datos no se han guardado, vuelve a intentarlo.
+</div>
+
+
+	<!--FORMULARIO DE AJUSTES-->
+	<form class="col-md-5 ml-0 pl-0" #postNew="ngForm" (ngSubmit)="onSubmit(postNew)">
+		<div class="form-group">
+			<label for="title">Titulo</label>
+			<input type="text" name="title" #title="ngModel" [(ngModel)]="post.title" class="form-control" required/>
+			<small *ngIf="!title.valid && title.touched" class="invalid-feedback d-block">
+			El titulo no es valido.
+			</small>
+		</div>
+
+		<div class="form-group">
+			<label for="content">Contenido</label>
+			<textarea [froalaEditor]="froala_options" name="content" #content="ngModel" [(ngModel)]="post.content" class="form-control" required></textarea>
+			<small *ngIf="!content.valid && content.touched" class="invalid-feedback d-block">
+			El contenido no es valido.
+			</small>
+		</div>
+
+		<div class="form-group">
+			<label for="category_id">Categoria</label>
+			<select name="category_id" #category="ngModel" [(ngModel)]="post.category_id" class="form-control" required>
+				<option *ngFor="let category of categories" value="{{category.id}}">
+					{{category.name}}
+				</option>	
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="image">Imagen</label>
+			<angular-file-uploader
+				[config]="afuConfig"
+				[resetUpload]=resetVar
+				(ApiResponse)="imageUpload($event)">
+			</angular-file-uploader>	
+		</div>
+
+		<input type="submit" value="Guardar" class="btn btn-success" [disabled]="postNew.invalid"/>
+		
+	</form>
+	
+
+	<br>
+
+</div>
